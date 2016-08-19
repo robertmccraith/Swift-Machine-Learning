@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Cocoa
 
 
 public class Vector:CustomStringConvertible {
@@ -44,10 +45,10 @@ public class Vector:CustomStringConvertible {
     }
     
     
-    public func dot(b:Vector)->Double{
+    static public func *(l:Vector, r:Vector)->Double{
         var sum = 0.0
-        for i in 0..<length{
-            sum += self.v[i]*b.v[i]
+        for i in 0..<l.length{
+            sum += l[i]*r[i]
         }
         return sum
     }
@@ -78,13 +79,34 @@ public class Vector:CustomStringConvertible {
         for i in 0..<l.length {
             l.v[i] -= r.v[i]
         }
-        
-        
         return l
+    }
+    
+    static public func -(l:Double, r:Vector)->Vector{
+        
+        for i in 0..<r.length {
+            r.v[i] = 1 - r.v[i]
+        }
+        return r
+    }
+    
+    
+    static public prefix func -(vector:Vector)->Vector
+    {
+        let vec = vector
+        vec.v = vec.v.map({-$0})
+        return vec
     }
     
     public var description: String {
         
         return  self.v.description
     }
+    
+    public func logV(v:Vector)->Vector
+    {
+        v.v = v.v.map({ Darwin.log($0)  })
+        return v
+    }
+    
 }

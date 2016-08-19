@@ -35,13 +35,11 @@ public class Matrix:CustomStringConvertible {
     }
     
     
-    public func dot(b: Vector)->Vector{
+    static public func *(l: Matrix, r:Vector)->Vector{
         
-        let ans = Vector()
-        for i in 0..<size.h {
-            
-            ans.append(a: m[i].dot(b: b))
-            
+        let ans = Vector(value: 0.0, length: l.size.h)
+        for i in 0..<l.size.h {
+            ans[i] = l[i] * r
         }
         return ans
     }

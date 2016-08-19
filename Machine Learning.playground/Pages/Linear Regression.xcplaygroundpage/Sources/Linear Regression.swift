@@ -6,8 +6,8 @@ public func gradientDescent(X:Matrix, y:Vector, thet:Vector, alpha:Double, itera
     var jHistory:[Double] = []
     for _ in 0..<iterations {
         
-        let predictions = X.dot(b: theta)
-        let updates =  X.T.dot(b: predictions - y)
+        let predictions = X * theta
+        let updates =  X.T * ( predictions - y)
         
         
         theta = theta - alpha * (1/Double(y.length)) * updates
@@ -24,7 +24,7 @@ public func cost(theta:Vector, X:Matrix, y:Vector)->Double{
     let m = y.length
     
     
-    let prediction = X.dot(b: theta)
+    let prediction = X * theta
     let error = prediction - y
     let sum = error.v.reduce(0, { $0 + pow($1, 2)})
     
