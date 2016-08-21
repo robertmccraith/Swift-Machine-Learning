@@ -10,7 +10,8 @@ import Foundation
 import Cocoa
 
 
-public class Vector:CustomStringConvertible {
+public class Vector:CustomStringConvertible, NSCopying {
+	
     
     public var v:[Double] = []
     public var col:[[Double]] { get{ return transpose(v: v) } }
@@ -46,14 +47,26 @@ public class Vector:CustomStringConvertible {
     
     
     static public func *(l:Vector, r:Vector)->Double{
+		let l = l.copy() as! Vector
+		let r = r.copy() as! Vector
         var sum = 0.0
         for i in 0..<l.length{
             sum += l[i]*r[i]
         }
         return sum
     }
-
-    
+	
+	static public func /(l:Vector, r:Vector)->Vector{
+		let l = l.copy() as! Vector
+		let r = r.copy() as! Vector
+		
+		for i in 0..<l.length{
+			l[i] /= r[i]
+		}
+		return l
+		
+	}
+	
     public func transpose(v: [Double]) -> [[Double]] {
         var newMat:[[Double]] = []
         
@@ -65,25 +78,39 @@ public class Vector:CustomStringConvertible {
     }
     
     
-    static public func *(x:Double, r:Vector)->Vector{
-        let ans = r
-        for i in 0..<ans.length {
-            ans.v[i] *= x
+    static public func *(x:Double, r:Vector)->Vector
+	{
+		let r = r.copy() as! Vector
+        for i in 0..<r.length {
+            r[i] *= x
         }
         
-        return ans
+        return r
     }
-    
+	
+	static public func +(l:Vector, r:Vector)->Vector{
+		let l = l.copy() as! Vector
+		let r = r.copy() as! Vector
+		
+		for i in 0..<l.length {
+			l.v[i] += r.v[i]
+		}
+		return l
+	}
+	
     static public func -(l:Vector, r:Vector)->Vector{
-        
+		let l = l.copy() as! Vector
+		let r = r.copy() as! Vector
+		
         for i in 0..<l.length {
             l.v[i] -= r.v[i]
         }
         return l
     }
     
-    static public func -(l:Double, r:Vector)->Vector{
-        
+    static public func -(l:Double, r:Vector)->Vector
+	{
+        let r = r.copy() as! Vector
         for i in 0..<r.length {
             r.v[i] = 1 - r.v[i]
         }
@@ -93,7 +120,7 @@ public class Vector:CustomStringConvertible {
     
     static public prefix func -(vector:Vector)->Vector
     {
-        let vec = vector
+        let vec = vector.copy() as! Vector
         vec.v = vec.v.map({-$0})
         return vec
     }
@@ -108,5 +135,14 @@ public class Vector:CustomStringConvertible {
         v.v = v.v.map({ Darwin.log($0)  })
         return v
     }
+	
+	public func copy(with zone: NSZone? = nil) -> Any {
+		let copy = Vector(array: v)
+		
+		return copy
+	}
+	
+	
+	
     
 }

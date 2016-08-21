@@ -17,46 +17,30 @@ for i in input {
 }
 
 
-func sigmoid(z:Double)->Double{
-    return 1/(1+exp(-z))
+var norm = featureNormalize(mat: X)
+var X_norm = norm.X_norm
+X_norm = X_norm.prepend(a: 1)
+X = X.prepend(a: 1)
+
+var theta = Vector(value: 0.0, length: 3)
+
+theta = gdbt(t: theta, X: X_norm, y: y, maxIter: 1000, threshold: 1e-8, alpha: 0.01, beta: 0.8)
+
+cost(theta: theta, X: X_norm, y: y)
+
+var vec = Vector(array: theta.v.filter({theta.v.index(of: $0) != 0}))
+
+//convert the values from normalized into original scale
+theta = normalize(theta: theta, avg: Vector(array:norm.avg), sigma: Vector(array: norm.sigma))
+
+//predict result 45 in first, 85 in second
+sigmoid(z:Vector(array: [1, 45, 85])*theta)
+
+
+var p = predict(X: X, theta: theta)
+
+var accuracy = 100.0
+for i in 0..<y.length{
+	accuracy -= abs(y[i]-p[i])
 }
-
-func sigmoid(v:Vector)->Vector
-{
-    let vec = Vector(value: 0.0, length: v.length)
-    for i in 0..<v.length{
-        vec[i] = sigmoid(z: v[i])
-    }
-    return vec
-}
-
-func logV(v:Vector)->Vector
-{
-    let vec = Vector(array: v.v)
-    vec.v = vec.v.map({ Darwin.log($0)  })
-    return vec
-}
-
-
-func cost(theta: Vector, X: Matrix, y:Vector)->Double
-{
-    var J = 0.0
-    let hypothesis = sigmoid(v: X*theta)
-    
-    J = -y*logV(v: hypothesis)-(1-(-y))*logV(v: 1-hypothesis)
-    
-    return J/Double(X.size.h)
-}
-
-
-func gradient(theta: Vector, X: Matrix, y:Vector)->Double
-{
-    let g = (X.T*sigmoid(v: X*theta)-y).v.reduce(0, {$0+$1})
-    
-    return g/Double(X.size.h)
-}
-
-var theta = Vector(value: 0.0, length: 2)
-cost(theta: theta, X: X, y: y)
-
-
+print("Train accuracy: \(100*accuracy/Double(y.length))%")

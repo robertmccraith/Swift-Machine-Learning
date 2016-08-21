@@ -16,7 +16,17 @@ public class Matrix:CustomStringConvertible {
     public var T:Matrix {get { return transpose(m: self) } }
     
     public init() {}
-    
+	
+	public init(diag:Double, size:Int)
+	{
+		for i in 0..<size{
+			let vector = Vector(value: 0.0, length: size)
+			vector[i] = diag
+			m.append(vector)
+		}
+	}
+	
+	
     public subscript(i:Int, j:Int)->Double
     {
         get{
