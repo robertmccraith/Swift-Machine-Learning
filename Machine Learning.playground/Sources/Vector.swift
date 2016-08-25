@@ -56,6 +56,16 @@ public class Vector:CustomStringConvertible, NSCopying {
         return sum
     }
 	
+	public func mult( r:Vector)->Vector{
+		let l = Vector(array: v)
+		let r = r.copy() as! Vector
+		
+		for i in 0..<l.length{
+			l[i] *= r[i]
+		}
+		return l
+	}
+	
 	static public func /(l:Vector, r:Vector)->Vector{
 		let l = l.copy() as! Vector
 		let r = r.copy() as! Vector
@@ -77,7 +87,16 @@ public class Vector:CustomStringConvertible, NSCopying {
         return newMat
     }
     
-    
+	static public func ^(x:Vector, r:Double)->Vector
+	{
+		let x = x.copy() as! Vector
+		for i in 0..<x.length {
+			x[i] = pow(x[i],r)
+		}
+		return x
+	}
+ 
+	
     static public func *(x:Double, r:Vector)->Vector
 	{
 		let r = r.copy() as! Vector

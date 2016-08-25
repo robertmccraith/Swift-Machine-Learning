@@ -28,43 +28,43 @@ public func cost(theta: Vector, X: Matrix, y:Vector)->Double
 {
 	var J = 0.0
 	let hypothesis = sigmoid(v: X*theta)
+	let m = Double(X.size.h)
+	J = (-y*logV(v: hypothesis)-(1-y)*logV(v: 1-hypothesis))/m
 	
-	J = -y*logV(v: hypothesis)-(1-y)*logV(v: 1-hypothesis)
-	
-	return J/Double(X.size.h)
+	return J
 }
 
 
 public func gradient(theta: Vector, X: Matrix, y:Vector)->Vector
 {
 	
-	let g = X.T*(sigmoid(v: X*theta)-y)
+	let g = (1/Double(y.length)) * X.T*(sigmoid(v: X*theta)-y)
 	
-	return (1/Double(y.length))*g
+	return g
 }
 
 
 
 
-public func gdbt(t:Vector, X:Matrix, y:Vector, maxIter:Int, threshold:Double, alpha: Double, beta:Double) -> Vector{
+public func gdbt(t:Vector, X:Matrix, y:Vector, maxIter:Int, threshold:Double, alpha: Double, beta:Double, lambda:Double) -> Vector{
 	var theta = t
 	
 	for _ in 0..<maxIter{
 		
-		let grad = gradient(theta: theta, X: X, y: y)
+		let grad = gradientReg(theta: theta, X: X, y: y, lambda: lambda)
 		let delta = -grad
 		
 		if grad * grad < threshold {
 			return theta
 		}
 		
-		let J = cost(theta: theta, X: X, y: y)
+		let J = costReg(theta: theta, X: X, y: y, lambda:lambda)
 		let alphaGradDelta = alpha*grad*delta
 		
 		
 		var t = 1.0
 		
-		while cost(theta: theta+t*delta, X: X, y: y) > J+t*alphaGradDelta {
+		while costReg(theta: theta+t*delta, X: X, y: y, lambda:lambda) > J+t*alphaGradDelta {
 			t = beta*t
 		}
 		
@@ -100,6 +100,44 @@ public func predict(X:Matrix, theta:Vector)->Vector
 	return vec
 	
 }
+
+
+public func mapFeature(X1:Vector, X2:Vector, degree:Int)->Matrix
+{
+	let out = Matrix(h: X1.length, w: 1, num: 1.0)
+	
+	for i in 1...degree{
+		for j in 0...i{
+			let product = (X1^Double(i-j)).mult(r:(X2^Double(j)))
+			for k in 0..<X1.length{
+				out[k].append(a: product[k])
+				
+				
+			}
+		}
+	}
+	
+	return out
+}
+
+public func costReg(theta: Vector, X: Matrix, y:Vector, lambda:Double)->Double
+{
+	let m = Double(X.size.h)
+	
+	let J = cost(theta: theta, X: X, y: y) + lambda/(2*m) * theta.v.reduce(0, {$0+pow($1, 2)})
+	
+	return J
+}
+
+public func gradientReg(theta: Vector, X: Matrix, y:Vector, lambda:Double)->Vector
+{
+	let m = Double(X.size.h)
+	
+	let g = gradient(theta: theta, X: X, y: y) + lambda/m * theta
+	
+	return g
+}
+
 
 
 

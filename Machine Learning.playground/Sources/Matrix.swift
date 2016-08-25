@@ -26,6 +26,13 @@ public class Matrix:CustomStringConvertible {
 		}
 	}
 	
+	public init(h:Int, w:Int, num:Double)
+	{
+		for _ in 0..<h{
+			let vector = Vector(value: num, length: w)
+			m.append(vector)
+		}
+	}
 	
     public subscript(i:Int, j:Int)->Double
     {
@@ -36,6 +43,7 @@ public class Matrix:CustomStringConvertible {
             m[i][j] = val
         }
     }
+	
     
     public subscript(i:Int)->Vector
     {
@@ -88,7 +96,7 @@ public class Matrix:CustomStringConvertible {
         }
         return ans
     }
-    
+	
     public var description: String {
         return self.m.map({$0.description}).reduce("[", {$0+"\n"+$1}) + "\n]"
     }
@@ -98,6 +106,7 @@ public class Matrix:CustomStringConvertible {
         let mat = self.T
 
         let ma = Matrix()
+		
         ma.m.append(Vector(value: a, length:mat.size.w))
         
         ma.m.append(contentsOf: mat.m)
