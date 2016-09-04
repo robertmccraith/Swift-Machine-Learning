@@ -23,8 +23,10 @@ public func gradientDescent(X:Matrix, y:Vector, thet:Vector, alpha:Double, itera
 public func cost(theta:Vector, X:Matrix, y:Vector)->Double{
     let m = y.length
     
-    
+	
     let prediction = X * theta
+
+	
     let error = prediction - y
     let sum = error.v.reduce(0, { $0 + pow($1, 2)})
     

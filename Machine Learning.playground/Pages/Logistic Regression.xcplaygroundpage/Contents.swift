@@ -11,9 +11,9 @@ X = X.prepend(a: 1)
 
 
 
-var theta = Vector(value: 0.0, length: X.size.w)
+var theta = Vector(value: 0.0, length: X.cols)
 
-theta = gdbt(t: theta, X: X_norm, y: y, maxIter: 1000, threshold: 1e-8, alpha: 0.01, beta: 0.8, lambda: 0)
+theta = gdbt(t: theta, X: X_norm, y: y, maxIter: 1000, threshold: 1e-8, alpha: 0.01, beta: 0.8, lambda: 0.0)
 
 cost(theta: theta, X: X_norm, y: y)
 
@@ -28,7 +28,7 @@ sigmoid(z:Vector(array: [1, 45, 85])*theta)
 
 var p = predict(X: X, theta: theta)
 
-var accuracy = 100.0
+var accuracy = Double(X.rows)
 for i in 0..<y.length{
 	accuracy -= abs(y[i]-p[i])
 }
@@ -42,7 +42,7 @@ X = file.X
 y = file.y
 X = mapFeature(X1: X.T[0], X2: X.T[1], degree: 6)
 
-theta = Vector(value: 0.0, length: X.size.w)
+theta = Vector(value: 0.0, length: X.cols)
 
 let lambda = 1.0
 
@@ -54,7 +54,7 @@ theta = gdbt(t: theta, X: X, y: y, maxIter: 400, threshold: 1e-8, alpha: 0.01, b
 p = predict(X: X, theta: theta)
 
 
-accuracy = Double(X.size.h)
+accuracy = Double(X.rows)
 for i in 0..<y.length{
 	accuracy -= abs(y[i]-p[i])
 }

@@ -3,5 +3,6 @@
     <pages>
         <page name='Linear Regression'/>
         <page name='Logistic Regression'/>
+        <page name='Multi-class Classification and Neural Networks'/>
     </pages>
 </playground>

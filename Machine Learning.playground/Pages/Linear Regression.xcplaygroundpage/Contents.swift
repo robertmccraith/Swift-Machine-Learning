@@ -14,7 +14,7 @@ X = X.prepend(a: 1)
 
 
 
-var theta = Vector(value: 0.0, length: X.size.w)
+var theta = Vector(value: 0.0, length: X.cols)
 var iterations = 1500
 var alpha = 0.01
 
@@ -29,11 +29,6 @@ print(results.theta)
 
 
 
-
-
-
-
-
 file = readFile(fileName: "ex1data2")
 X = file.X
 y = file.y
@@ -41,7 +36,7 @@ y = file.y
 var normalized = featureNormalize(mat: X)
 X = normalized.X_norm
 X = X.prepend(a: 1.0)
-theta = Vector(value: 0.0, length: X.size.w)
+theta = Vector(value: 0.0, length: X.cols)
 iterations = 400
 alpha = 0.01
 
