@@ -13,6 +13,7 @@ X = X.prepend(a: 1)
 
 var theta = Vector(value: 0.0, length: X.cols)
 
+
 theta = gdbt(t: theta, X: X_norm, y: y, maxIter: 1000, threshold: 1e-8, alpha: 0.01, beta: 0.8, lambda: 0.0)
 
 cost(theta: theta, X: X_norm, y: y)

@@ -14,10 +14,12 @@ public class Vector:CustomStringConvertible, NSCopying {
 	
     
     public var v:[Double] = []
-    public var col:[[Double]] { get{ return transpose(v: v) } }
+	
     
     public var length:Int { get{ return v.count } }
-    public var T:[[Double]] {get { return transpose(v: v) } }
+    public var T:Matrix {get { return transpose() } }
+	public var row:Matrix { get {return Matrix(rows: 1, cols: self.length, arr: self.v)} }
+	public var col:Matrix { get {return Matrix(rows: self.length, cols: 1, arr: self.v)} }
     
     public init() { }
     
@@ -36,19 +38,33 @@ public class Vector:CustomStringConvertible, NSCopying {
             v[i] = val
         }
     }
-    
-    
+	
+	public subscript(range:Range<Int>)->Vector
+	{
+		get{
+			return Vector(array: Array(v[range]))
+		}
+		set(val){
+			self.v.replaceSubrange(range, with: val.v)
+		}
+	}
+	
+	
     public init(array: [Double]) {
         v = array
     }
     public func append(a:Double){
         v.append(a)
     }
-    
-    
+	
+	public func insert(a:Double, at index:Int)->Vector{
+		let vec = self.copy() as! Vector
+		vec.v.insert(a, at: index)
+		return vec
+	}
+	
     static public func *(l:Vector, r:Vector)->Double{
-		let l = l.copy() as! Vector
-		let r = r.copy() as! Vector
+
         var sum = 0.0
         for i in 0..<l.length{
             sum += l[i]*r[i]
@@ -56,10 +72,8 @@ public class Vector:CustomStringConvertible, NSCopying {
         return sum
     }
 	
-	public func mult( r:Vector)->Vector{
-		let l = Vector(array: v)
-		let r = r.copy() as! Vector
-		
+	static public func .*(l:Vector, r:Vector)->Vector{
+		let l = l.copy() as! Vector
 		for i in 0..<l.length{
 			l[i] *= r[i]
 		}
@@ -68,7 +82,6 @@ public class Vector:CustomStringConvertible, NSCopying {
 	
 	static public func /(l:Vector, r:Vector)->Vector{
 		let l = l.copy() as! Vector
-		let r = r.copy() as! Vector
 		
 		for i in 0..<l.length{
 			l[i] /= r[i]
@@ -77,11 +90,13 @@ public class Vector:CustomStringConvertible, NSCopying {
 		
 	}
 	
-    public func transpose(v: [Double]) -> [[Double]] {
-        var newMat:[[Double]] = []
+    public func transpose() -> Matrix {
+        let newMat = Matrix()
         
-        for i in 0..<v.count{
-            newMat.append([v[i]])
+        for i in 0..<self.length{
+			var arr:[Double] = []
+			arr.append(self[i])
+			newMat.m.append( Vector(array: [self[i]] ))
         }
         
         return newMat
@@ -106,6 +121,16 @@ public class Vector:CustomStringConvertible, NSCopying {
         
         return r
     }
+	
+	static public func /(v:Vector, c:Double)->Vector
+	{
+		let vec = v.copy() as! Vector
+		
+		vec.v = vec.v.map({$0/c})
+		
+		return vec
+	}
+	
 	
 	static public func +(l:Vector, r:Vector)->Vector{
 		let l = l.copy() as! Vector
@@ -145,8 +170,9 @@ public class Vector:CustomStringConvertible, NSCopying {
     }
     
     public var description: String {
-        
-        return  self.v.description
+		//return "\(self.length)"
+		
+		return  self.v.description
     }
     
     public func logV(v:Vector)->Vector

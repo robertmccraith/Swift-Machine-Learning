@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<playground version='6.0' target-platform='macos' auto-termination-delay='1' display-mode='raw' timelineScrubberEnabled='true'>
+<playground version='6.0' target-platform='macos' auto-termination-delay='60' display-mode='raw' timelineScrubberEnabled='true'>
     <pages>
         <page name='Linear Regression'/>
         <page name='Logistic Regression'/>
         <page name='Multi-class Classification and Neural Networks'/>
+        <page name='Neural Networks'/>
     </pages>
 </playground>

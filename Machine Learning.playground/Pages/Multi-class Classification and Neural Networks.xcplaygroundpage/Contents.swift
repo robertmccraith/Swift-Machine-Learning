@@ -26,11 +26,9 @@ var X = readMat(fileName: "X2")
 let y = readMat(fileName: "y").T[0]
 
 
-let st = NSDate()
 let thetas = oneVsAll(x: X, y: y, num_labels: 10, lambda: 0.1)
 let pred = predictOneVsAll(thetas: thetas, x: X)
 
-print(st.timeIntervalSinceNow)
 var precision = 0
 
 for i in 0..<y.length{

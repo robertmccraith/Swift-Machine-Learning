@@ -1,8 +1,23 @@
 import Foundation
 
-public func gradientDescent(X:Matrix, y:Vector, thet:Vector, alpha:Double, iterations:Int)->(theta:Vector, jHistory:[Double]){
+/**
+Gradient Descent Algorithm
+- parameter X: matrix of values
+- parameter y: vector of target values
+- parameter theta: initial hypothesis values
+- parameter alpha: size of steps in each iteration
+- parameter iterations: number of iterations of gradient descend to run
+
+- returns: 
+	 theta: hypothesis values after gradient descent
+	 jHistory: history of costs at each iteration
+
+
+*/
+
+public func gradientDescent(X:Matrix, y:Vector, theta:Vector, alpha:Double, iterations:Int)->(theta:Vector, jHistory:[Double]){
     
-    var theta = thet
+    var t = theta
     var jHistory:[Double] = []
     for _ in 0..<iterations {
         
@@ -10,14 +25,14 @@ public func gradientDescent(X:Matrix, y:Vector, thet:Vector, alpha:Double, itera
         let updates =  X.T * ( predictions - y)
         
         
-        theta = theta - alpha * (1/Double(y.length)) * updates
+        t = t - alpha * (1/Double(y.length)) * updates
         
         
         jHistory.append(cost(theta: theta, X: X, y: y))
     }
     
     
-    return (theta,jHistory)
+    return (t,jHistory)
 }
 
 public func cost(theta:Vector, X:Matrix, y:Vector)->Double{

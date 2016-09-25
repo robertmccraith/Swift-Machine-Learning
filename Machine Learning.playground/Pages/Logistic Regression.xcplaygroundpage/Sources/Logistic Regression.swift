@@ -34,7 +34,7 @@ public func mapFeature(X1:Vector, X2:Vector, degree:Int)->Matrix
 	let out = Matrix(rows: X1.length, cols: 1, num: 1.0)
 	for i in 1...degree{
 		for j in 0...i{
-			let product = (X1^Double(i-j)).mult(r:(X2^Double(j)))
+			let product = (X1^Double(i-j)).*(r:(X2^Double(j)))
 			for k in 0..<X1.length{
 				out[k].append(a: product[k])
 			}

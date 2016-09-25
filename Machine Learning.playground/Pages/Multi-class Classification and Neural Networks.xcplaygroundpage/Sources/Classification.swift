@@ -5,7 +5,6 @@ public func oneVsAll(x:Matrix, y:Vector, num_labels:Int, lambda:Double)->Matrix
 	let X = x.prepend(a: 1)
 	let thetas = Matrix(rows: num_labels, cols: X.cols, num: 0.0)
 	
-	_ = Vector(value: 0.0, length: X.cols)
 	
 	for i in 0..<num_labels {
 		let initTheta = Vector(value: 0.0, length: X.cols)
@@ -18,9 +17,7 @@ public func oneVsAll(x:Matrix, y:Vector, num_labels:Int, lambda:Double)->Matrix
 			}
 		})
 		let vecY = Vector(array: yi)
-		let st = NSDate()
 		thetas[i] = gdbt(t: initTheta, X: X, y: vecY, maxIter: 100, threshold: 1e-8, alpha: 0.25, beta: 0.5, lambda: lambda)
-		print(st.timeIntervalSinceNow)
 	}
 	
 	

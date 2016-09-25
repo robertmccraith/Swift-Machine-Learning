@@ -36,8 +36,9 @@ public func readFile(fileName:String)->(X:Matrix, y:Vector)
 	let contentData = FileManager.default.contents(atPath: filePath!)
 	let inString = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String
 	
-	let split = inString?.components(separatedBy: "\n")
+	let split = inString?.replacingOccurrences(of: "\r", with: "") .components(separatedBy: "\n")
 	let input = (split!.filter({$0 != ""}).map({$0.components(separatedBy:",")}))
+	
 	let X:Matrix = Matrix()
 	let y:Vector = Vector()
 	
@@ -100,6 +101,14 @@ public func logV(v:Vector)->Vector
 }
 
 
+public func logM(mat:Matrix)->Matrix
+{
+	let m = mat.copy() as! Matrix
+	m.m = m.m.map({logV(v: $0)})
+	
+	return m
+}
+
 
 public func cost(theta: Vector, X: Matrix, y:Vector)->Double
 {
@@ -137,11 +146,19 @@ public func costReg(theta: Vector, X: Matrix, y:Vector, lambda:Double)->Double
 
 public func gradientReg(theta: Vector, X: Matrix, y:Vector, lambda:Double)->Vector
 {
-	let m = Double(X.rows)
 	
-	let g = gradient(theta: theta, X: X, y: y) + lambda/m * theta
+	let sigHypot = sigmoid(v: X*theta)
 	
-	return g
+	let grad = Vector()
+	
+	let xT = X.T
+	
+	grad.append(a: xT[0]*(sigHypot-y))
+	
+	for i in 1..<X.cols{
+		grad.append(a: xT[i]*(sigHypot-y) + lambda*theta[i])
+	}
+	return grad/Double(y.length)
 }
 
 
@@ -153,6 +170,7 @@ public func gdbt(t:Vector, X:Matrix, y:Vector, maxIter:Int, threshold:Double, al
 		
 		let grad = gradientReg(theta: theta, X: X, y: y, lambda: lambda)
 		let delta = -grad
+		
 		
 		if grad * grad < threshold {
 			return theta
@@ -170,7 +188,10 @@ public func gdbt(t:Vector, X:Matrix, y:Vector, maxIter:Int, threshold:Double, al
 		
 		theta = theta+t*delta
 		
+		
 	}
+	
+	print("cost", costReg(theta: theta, X: X, y: y, lambda: lambda))
 	return theta
 }
 
